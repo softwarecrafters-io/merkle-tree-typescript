@@ -1,10 +1,10 @@
-import { SHA256 } from 'crypto-js';
+import { Hash } from './Hash';
 
 export class MerkleTree {
 	constructor(public readonly nodeStack: string[][]) {}
 
 	static createTree(elements: string[]) {
-		const leafNode = elements.map((e) => SHA256(e).toString());
+		const leafNode = elements.map((e) => Hash.generate(e));
 		const nodes = this.generateNodesRecursively(leafNode);
 		return new MerkleTree(nodes);
 	}
@@ -35,8 +35,8 @@ export class MerkleTree {
 		const rootNode = nodes[0];
 		const hasCoupleOfLeaves = index < rootNode.length - 1;
 		return hasCoupleOfLeaves
-			? SHA256(rootNode[index] + rootNode[index + 1]).toString()
-			: SHA256(rootNode[index] + rootNode[index]).toString();
+			? Hash.generate(rootNode[index] + rootNode[index + 1])
+			: Hash.generate(rootNode[index] + rootNode[index]);
 	}
 
 	private static generatePairIndex(length) {
@@ -47,7 +47,7 @@ export class MerkleTree {
 	}
 
 	generateMerklePath(element) {
-		const leafHash = SHA256(element).toString();
+		const leafHash = Hash.generate(element);
 		const leafLevel = this.getHeight();
 		const index = this.getNodesByLevel(leafLevel).findIndex((e) => e == leafHash);
 		if (index <= -1) {
@@ -101,7 +101,7 @@ export class MerkleTree {
 }
 
 export function verifyProofOfInclusion(element: string, merkleRoot: string, merklePath: string[]) {
-	const hash = SHA256(element).toString();
-	const newMerkleRoot = [hash].concat(merklePath).reduce((h1, h2) => SHA256(h1 + h2));
+	const hash = Hash.generate(element);
+	const newMerkleRoot = [hash].concat(merklePath).reduce((h1, h2) => Hash.generate(h1 + h2));
 	return newMerkleRoot == merkleRoot;
 }

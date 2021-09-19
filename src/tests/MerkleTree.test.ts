@@ -41,25 +41,4 @@ describe('The Merkle Tree', () => {
 			'd3a0f1c792ccf7f1708d5422696263e35755a86917ea76ef9242bd4a8cf4891a',
 		]);
 	});
-
-	it('verifies proof of inclusion for a given merkle path', () => {
-		const merkelTree = MerkleTree.createTree(['a', 'b', 'c', 'd']);
-		const merklePath = [
-			'3e23e8160039594a33894f6564e1b1348bbd7a0088d42c4acb73eeaed59c009d',
-			'd3a0f1c792ccf7f1708d5422696263e35755a86917ea76ef9242bd4a8cf4891a',
-		];
-
-		expect(verifyProofOfInclusion('a', merkelTree.getMerkleRoot(), merklePath)).toBe(true);
-	});
-
-	it('verifies proof of inclusion for a given merkle path and odd merkle tree', () => {
-		const merkelTree = MerkleTree.createTree(['a', 'b', 'c', 'd', 'e']);
-		const merklePath = [
-			'3e23e8160039594a33894f6564e1b1348bbd7a0088d42c4acb73eeaed59c009d',
-			'd3a0f1c792ccf7f1708d5422696263e35755a86917ea76ef9242bd4a8cf4891a',
-			'463bb9d8f7fe77a1f4ea68498899ecec274cdf238783a42cb448ce1e2d8cbb6a',
-		];
-
-		expect(verifyProofOfInclusion('a', merkelTree.getMerkleRoot(), merklePath)).toBe(true);
-	});
 });
