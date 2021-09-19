@@ -1,4 +1,4 @@
-import { MerkleTree, verifyProofOfInclusion } from '../core/MerkleTree';
+import { MerkleTree } from '../core/MerkleTree';
 import { ProofOfInclusion } from '../core/ProofOfInclusion';
 
 describe('The proof of inclusion', () => {

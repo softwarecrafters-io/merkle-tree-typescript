@@ -1,4 +1,4 @@
-import { MerkleTree, verifyProofOfInclusion } from '../core/MerkleTree';
+import { MerkleTree } from '../core/MerkleTree';
 
 describe('The Merkle Tree', () => {
 	it('creates a merkle tree from given collection with a even number of elements', () => {
