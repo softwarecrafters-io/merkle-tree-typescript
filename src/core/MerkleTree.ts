@@ -1,25 +1,15 @@
 import { Hash } from './Hash';
 
 export class MerkleTree {
-	constructor(public readonly nodeStack: string[][]) {}
+	constructor(public readonly nodeStack: ReadonlyArray<ReadonlyArray<string>>) {}
 
 	static createTree(elements: string[]) {
 		const leafNode = elements.map((e) => Hash.generate(e));
-		const nodes = this.generateNodesRecursively(leafNode);
+		const nodes = this.generateNodes(leafNode);
 		return new MerkleTree(nodes);
 	}
 
-	private static generateNodes(baseNode: string[]) {
-		let nodes: string[][] = [];
-		nodes = [baseNode].concat(nodes);
-		while (nodes[0].length > 1) {
-			const node = this.generatePairIndex(nodes[0].length).map((v) => this.generateParentHashNode(v, nodes));
-			nodes = [node].concat(nodes);
-		}
-		return nodes;
-	}
-
-	private static generateNodesRecursively(baseNode: string[], nodes: string[][] = [baseNode]) {
+	private static generateNodes(baseNode: string[], nodes: string[][] = [baseNode]) {
 		const rootNode = nodes[0];
 		const isValidMerkleRoot = rootNode.length <= 1;
 		if (isValidMerkleRoot) {
@@ -28,7 +18,17 @@ export class MerkleTree {
 		const node = this.generatePairIndex(rootNode.length).map((evenIndex) =>
 			this.generateParentHashNode(evenIndex, nodes)
 		);
-		return this.generateNodesRecursively(baseNode, [node].concat(nodes));
+		return this.generateNodes(baseNode, [node].concat(nodes));
+	}
+
+	private static generateNodesIteratively(baseNode: string[]) {
+		let nodes: string[][] = [];
+		nodes = [baseNode].concat(nodes);
+		while (nodes[0].length > 1) {
+			const node = this.generatePairIndex(nodes[0].length).map((v) => this.generateParentHashNode(v, nodes));
+			nodes = [node].concat(nodes);
+		}
+		return nodes;
 	}
 
 	private static generateParentHashNode(index: number, nodes: string[][]) {
@@ -46,12 +46,12 @@ export class MerkleTree {
 			.filter((index) => index % 2 == 0);
 	}
 
-	generateMerklePath(element) {
+	generateMerklePath(element): string[] {
 		const leafHash = Hash.generate(element);
 		const leafLevel = this.getHeight();
 		const index = this.getNodesByLevel(leafLevel).findIndex((e) => e == leafHash);
 		if (index <= -1) {
-			return null;
+			return [];
 		}
 		return this.buildMerklePath(index, leafLevel);
 	}
@@ -73,21 +73,7 @@ export class MerkleTree {
 		return { index: Math.floor((index - 1) / 2), hash: neighbourHash };
 	}
 
-	isEqual(merkleTree: MerkleTree) {
-		return this.getMerkleRoot() === merkleTree.getMerkleRoot();
-	}
-
-	hasEqualMerkleRoot(merkleRoot: string) {
-		return this.getMerkleRoot() === merkleRoot;
-	}
-
-	getNodesByLevel(level: number): string[] {
-		if (level >= this.nodeStack.length) {
-			throw 'level out of range';
-		}
-		if (level < 0) {
-			throw 'negative numbers are not allowed';
-		}
+	getNodesByLevel(level: number) {
 		return this.nodeStack[level];
 	}
 

@@ -7,9 +7,7 @@ describe('The Merkle Tree', () => {
 		expect(merkelTree.getHeight()).toBe(2);
 		expect(merkelTree.getNodesByLevel(1).length).toBe(2);
 		expect(merkelTree.getNodesByLevel(2).length).toBe(4);
-		expect(
-			merkelTree.hasEqualMerkleRoot('58c89d709329eb37285837b042ab6ff72c7c8f74de0446b091b6a0131c102cfd')
-		).toBeTruthy();
+		expect(merkelTree.getMerkleRoot()).toEqual('58c89d709329eb37285837b042ab6ff72c7c8f74de0446b091b6a0131c102cfd');
 	});
 
 	it('creates a merkle tree from given collection with a odd number of elements', () => {
