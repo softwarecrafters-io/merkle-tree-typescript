@@ -99,9 +99,3 @@ export class MerkleTree {
 		return this.nodeStack.length - 1;
 	}
 }
-
-export function verifyProofOfInclusion(element: string, merkleRoot: string, merklePath: string[]) {
-	const hash = Hash.generate(element);
-	const newMerkleRoot = [hash].concat(merklePath).reduce((h1, h2) => Hash.generate(h1 + h2));
-	return newMerkleRoot == merkleRoot;
-}
