@@ -1,8 +1,8 @@
-import { MerkleTree } from '../core/MerkleTree';
+import { MerkleTreeOld } from '../core/MerkleTreeOld';
 
 describe('The Merkle Tree', () => {
 	it('creates a merkle tree from given collection with a even number of elements', () => {
-		const merkelTree = MerkleTree.createTree(['a', 'b', 'c', 'd']);
+		const merkelTree = MerkleTreeOld.createTree(['a', 'b', 'c', 'd']);
 
 		expect(merkelTree.getHeight()).toBe(2);
 		expect(merkelTree.getNodesByLevel(1).length).toBe(2);
@@ -11,7 +11,7 @@ describe('The Merkle Tree', () => {
 	});
 
 	it('creates a merkle tree from given collection with a odd number of elements', () => {
-		const merkelTree = MerkleTree.createTree(['a', 'b', 'c', 'd', 'e']);
+		const merkelTree = MerkleTreeOld.createTree(['a', 'b', 'c', 'd', 'e']);
 		expect(merkelTree.getHeight()).toBe(3);
 		expect(merkelTree.getNodesByLevel(1).length).toBe(2);
 		expect(merkelTree.getNodesByLevel(2).length).toBe(3);
@@ -20,7 +20,7 @@ describe('The Merkle Tree', () => {
 	});
 
 	it('calculates merkle path for given odd merkle tree', () => {
-		const merkelTree = MerkleTree.createTree(['a', 'b', 'c', 'd', 'e']);
+		const merkelTree = MerkleTreeOld.createTree(['a', 'b', 'c', 'd', 'e']);
 		const result = merkelTree.generateMerklePath('a');
 
 		expect(result).toEqual([
@@ -31,7 +31,7 @@ describe('The Merkle Tree', () => {
 	});
 
 	it('calculates merkle path for given even merkle tree', () => {
-		const merkelTree = MerkleTree.createTree(['a', 'b', 'c', 'd']);
+		const merkelTree = MerkleTreeOld.createTree(['a', 'b', 'c', 'd']);
 		const result = merkelTree.generateMerklePath('a');
 
 		expect(result).toEqual([
