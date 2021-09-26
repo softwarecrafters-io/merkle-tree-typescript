@@ -2,7 +2,7 @@ import { hash } from './utils/Crypto';
 import { range } from './utils/Array';
 
 export class MerkleTree {
-	constructor(private readonly nodeStack: ReadonlyArray<ReadonlyArray<string>>) {}
+	private constructor(private readonly nodeStack: ReadonlyArray<ReadonlyArray<string>>) {}
 
 	static create(elements: string[]) {
 		const leafNode = elements.map((e) => hash(e));
