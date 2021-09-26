@@ -1,15 +1,17 @@
-import { hash } from './Hash';
+import { hash } from './utils/Crypto';
 
 export class ProofOfInclusion {
-	private constructor(private readonly merkleRoot: string) {}
+	private constructor(private readonly merkleRoot: string, private readonly merklePath: ReadonlyArray<string>) {}
 
-	static create(merkleRoot: string) {
-		return new ProofOfInclusion(merkleRoot);
+	static create(merkleRoot: string, merklePath: ReadonlyArray<string>) {
+		return new ProofOfInclusion(merkleRoot, merklePath);
 	}
 
-	verify(element: string, merklePath: string[]) {
+	verify(element: string) {
 		const hashedElement = hash(element);
-		const newMerkleRoot = [hashedElement].concat(merklePath).reduce((h1, h2) => hash(h1 + h2));
+		const newMerkleRoot = [hashedElement]
+			.concat(this.merklePath)
+			.reduce((previousHash, currentHash) => hash(previousHash + currentHash));
 		return newMerkleRoot === this.merkleRoot;
 	}
 }
