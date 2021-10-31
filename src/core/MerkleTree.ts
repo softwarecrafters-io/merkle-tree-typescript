@@ -2,7 +2,7 @@ import { hash } from './utils/Crypto';
 import { range } from './utils/Array';
 
 export class MerkleTree {
-	private constructor(private readonly nodeStack: ReadonlyArray<ReadonlyArray<string>>) {}
+	private constructor(private readonly nodeMatrix: ReadonlyArray<ReadonlyArray<string>>) {}
 
 	static create(elements: string[]) {
 		const leafNode = elements.map((e) => hash(e));
@@ -28,7 +28,7 @@ export class MerkleTree {
 
 	generateMerklePath(element): string[] {
 		const leafHash = hash(element);
-		const leafLevel = this.nodeStack.length - 1;
+		const leafLevel = this.nodeMatrix.length - 1;
 		const leafIndex = this.getNodesByLevel(leafLevel).findIndex((e) => e == leafHash);
 		if (leafIndex <= -1) {
 			return [];
@@ -43,7 +43,8 @@ export class MerkleTree {
 	}
 
 	private getNeighbourBy(index: number, level: number) {
-		if (index % 2 == 0) {
+		const isLeftNode = index % 2 == 0;
+		if (isLeftNode) {
 			return this.getNodesByLevel(level)[index + 1];
 		}
 		return this.getNodesByLevel(level)[index - 1];
@@ -54,10 +55,10 @@ export class MerkleTree {
 	}
 
 	getNodesByLevel(level: number) {
-		return this.nodeStack[level];
+		return this.nodeMatrix[level];
 	}
 
 	getLeaves() {
-		return this.nodeStack[this.nodeStack.length - 1];
+		return this.nodeMatrix[this.nodeMatrix.length - 1];
 	}
 }
